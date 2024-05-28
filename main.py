@@ -4,13 +4,13 @@ import logging
 import threading  # type: ignore
 
 from colorama import Fore, init
-from voice_assistant.config import Config
-from voice_assistant.utils import delete_file
-from voice_assistant.text_to_speech import text_to_speech
-from voice_assistant.audio import record_audio, play_audio
-from voice_assistant.transcription import transcribe_audio
-from voice_assistant.response_generation import generate_response
-from voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
+from src.voice_assistant.config import Config
+from src.voice_assistant.utils import delete_file
+from src.voice_assistant.text_to_speech import text_to_speech
+from src.voice_assistant.audio import record_audio, play_audio
+from src.voice_assistant.transcription import transcribe_audio
+from src.voice_assistant.response_generation import generate_response
+from src.voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
