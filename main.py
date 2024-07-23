@@ -4,13 +4,13 @@ import logging
 import threading  # type: ignore
 
 from colorama import Fore, init
-from src.voice_assistant.config import Config
-from src.voice_assistant.utils import delete_file
-from src.voice_assistant.text_to_speech import text_to_speech
-from src.voice_assistant.audio import record_audio, play_audio
-from src.voice_assistant.transcription import transcribe_audio
-from src.voice_assistant.response_generation import generate_response
-from src.voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
+from backend.voice_assistant.config import Config
+from backend.voice_assistant.utils import delete_file
+from backend.voice_assistant.text_to_speech import text_to_speech
+from backend.voice_assistant.audio import record_audio, play_audio
+from backend.voice_assistant.transcription import transcribe_audio
+from backend.voice_assistant.response_generation import generate_response
+from backend.voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
@@ -102,16 +102,17 @@ def capture_frame_on_speech():
                 # Play the generated speech audio
                 play_audio(output_file)
 
-                # Clean up audio files
-                delete_file('test.wav')
-                delete_file(output_file)
-
             except Exception as e:
-                logging.error(f"{Fore.RED}An error occurred: {e}")
+                logging.error(
+                    f"{Fore.RED}An error occurred during processing: {e}")
+                time.sleep(1)  # Wait before retrying
+
+            finally:
+                # Clean up audio files
                 delete_file('test.wav')
                 if 'output_file' in locals():
                     delete_file(output_file)
-                time.sleep(1)
+
     finally:
         stop_event.set()
         webcam_thread.join()
