@@ -7,23 +7,20 @@ from colorama import Fore, init
 from backend.voice_assistant.config import Config
 from backend.voice_assistant.utils import delete_file
 from backend.voice_assistant.text_to_speech import text_to_speech
-from backend.voice_assistant.audio import record_audio, play_audio
+from backend.voice_assistant.audio import play_audio, record_audio
 from backend.voice_assistant.transcription import transcribe_audio
 from backend.voice_assistant.response_generation import generate_response
 from backend.voice_assistant.api_key_manager import get_transcription_api_key, get_response_api_key, get_tts_api_key
 
 # Configure logging
 logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+                    format="[%(asctime)s] %(lineno)d - %(filename)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s")
 
 # Initialize colorama
 init(autoreset=True)
 
 
 def capture_frame_on_speech():
-    """
-    Capture a frame from the webcam when the user starts speaking.
-    """
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
@@ -74,6 +71,8 @@ def capture_frame_on_speech():
                     logging.info(
                         f"{Fore.GREEN}Snapshot taken and saved as 'snapshot.jpg'")
 
+
+                # TODO: add snapshot to chat history
                 # Append the user's input to the chat history
                 chat_history.append({"role": "user", "content": user_input})
 
@@ -89,15 +88,25 @@ def capture_frame_on_speech():
                 chat_history.append(
                     {"role": "assistant", "content": response_text})
 
+                # TODO: remove this line, if you wna tot use openai tts model as default set to openai
+                Config.TTS_MODEL = 'deepgram'
+                
                 # Determine the output file format based on the TTS model
                 output_file = 'output.mp3' if Config.TTS_MODEL == 'openai' else 'output.wav'
-
                 # Get the API key for TTS
                 tts_api_key = get_tts_api_key()
 
                 # Convert the response text to speech and save it to the appropriate file
-                text_to_speech(Config.TTS_MODEL, tts_api_key,
-                               response_text, output_file, Config.LOCAL_MODEL_PATH)
+                response = text_to_speech(Config.TTS_MODEL, tts_api_key,
+                                          response_text, output_file, Config.LOCAL_MODEL_PATH)
+
+                # Ensure the response is correctly handled
+                if Config.TTS_MODEL == 'openai':
+                    with open(output_file, 'wb') as f:
+                        f.write(response.content)
+                else:
+                    # Handle other TTS models if necessary
+                    pass
 
                 # Play the generated speech audio
                 play_audio(output_file)

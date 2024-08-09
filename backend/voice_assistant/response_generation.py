@@ -21,7 +21,7 @@ def generate_response(model, api_key, chat_history, local_model_path=None):
         if model == 'openai':
             client = OpenAI(api_key=api_key)
             response = client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-4o-mini",
                 messages=chat_history
             )
             return response.choices[0].message.content

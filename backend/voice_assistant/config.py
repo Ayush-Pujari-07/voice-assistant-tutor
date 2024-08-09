@@ -23,7 +23,7 @@ class Config:
     # Model selection
     TRANSCRIPTION_MODEL = 'openai'  # possible values: openai, groq
     RESPONSE_MODEL = 'openai'       # possible values: openai, groq
-    TTS_MODEL = 'openai'        # possible values: openai, deepgram
+    TTS_MODEL = 'deepgram'        # possible values: openai, deepgram
 
     # API keys and paths
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")

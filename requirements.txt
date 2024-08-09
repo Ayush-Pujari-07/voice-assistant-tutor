@@ -25,5 +25,5 @@ groq
 python-dotenv
 colorama
 requests
-cv2
 ipykernel
+opencv-python

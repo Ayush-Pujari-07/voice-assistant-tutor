@@ -21,9 +21,10 @@ def text_to_speech(model, api_key, text, output_file_path, local_model_path=None
             speech_response = client.audio.speech.create(
                 model="tts-1",
                 voice="fable",
-                input=text
+                input=text,
+                response_format="mp3"
             )
-
+            logging.info(f"OpenAI filepath: {output_file_path}")
             speech_response.stream_to_file(output_file_path)
             with open(output_file_path, "wb") as audio_file:
                 # Ensure this correctly accesses the binary content
@@ -49,3 +50,4 @@ def text_to_speech(model, api_key, text, output_file_path, local_model_path=None
             raise ValueError("Unsupported TTS model")
     except Exception as e:
         logging.error(f"Failed to convert text to speech: {e}")
+        return None

@@ -1,4 +1,4 @@
-import time
+import time  # type: ignore
 import pygame
 import logging
 import speech_recognition as sr
